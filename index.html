@@ -1,0 +1,80 @@
+class Book:
+    def __init__(self, book_id, title):
+        self.book_id = book_id
+        self.title = title
+        self.is_borrowed = False  # เริ่มต้นมาหนังสือต้องยังไม่ถูกยืม
+
+    def __str__(self):
+        status = "🔴 ถูกยืมแล้ว" if self.is_borrowed else "🟢 ว่าง"
+        return f"[{self.book_id}] {self.title} - สถานะ: {status}"
+
+
+class Library:
+    def __init__(self):
+        self.books = []  # เก็บรายการหนังสือทั้งหมดในห้องสมุด
+
+    def add_book(self, book):
+        """เพิ่มหนังสือใหม่เข้าห้องสมุด"""
+        self.books.append(book)
+        print(f"📚 เพิ่มหนังสือ '{book.title}' เข้าสู่ระบบแล้ว")
+
+    def display_books(self):
+        """แสดงรายการหนังสือทั้งหมด"""
+        print("\n--- รายการหนังสือในห้องสมุด ---")
+        for book in self.books:
+            print(book)
+        print("--------------------------------\n")
+
+    def borrow_book(self, book_id):
+        """ฟังก์ชันสำหรับยืมหนังสือ"""
+        for book in self.books:
+            if book.book_id == book_id:
+                if not book.is_borrowed:
+                    book.is_borrowed = True
+                    print(f"✅ ยืมหนังสือ '{book.title}' สำเร็จ")
+                    return
+                else:
+                    print(f"❌ ขออภัย หนังสือ '{book.title}' ถูกยืมไปแล้ว")
+                    return
+        print(f"❌ ไม่พบหนังสือรหัส {book_id} ในระบบ")
+
+    def return_book(self, book_id):
+        """ฟังก์ชันสำหรับคืนหนังสือ"""
+        for book in self.books:
+            if book.book_id == book_id:
+                if book.is_borrowed:
+                    book.is_borrowed = False
+                    print(f"✅ คืนหนังสือ '{book.title}' สำเร็จ ขอบคุณครับ")
+                    return
+                else:
+                    print(f"ℹ️ หนังสือ '{book.title}' ยังไม่ได้ถูกยืม")
+                    return
+        print(f"❌ ไม่พบหนังสือรหัส {book_id} ในระบบ")
+
+
+# ==========================================
+# ทดสอบการใช้งานระบบจำลอง (Example Usage)
+# ==========================================
+
+# 1. สร้างห้องสมุด
+my_library = Library()
+
+# 2. นำหนังสือเรียนเข้าห้องสมุด
+my_library.add_book(Book("B01", "คณิตศาสตร์ ม.4"))
+my_library.add_book(Book("B02", "ฟิสิกส์ ม.5"))
+my_library.add_book(Book("B03", "ประวัติศาสตร์สากล"))
+
+# 3. ดูรายการหนังสือทั้งหมด
+my_library.display_books()
+
+# 4. นักเรียนมายืมหนังสือฟิสิกส์
+my_library.borrow_book("B02")
+
+# 5. มีคนพยายามจะยืมหนังสือฟิสิกส์ซ้ำ (ซึ่งถูกยืมไปแล้ว)
+my_library.borrow_book("B02")
+
+# 6. เช็คสถานะห้องสมุดอีกครั้ง
+my_library.display_books()
+
+# 7. นักเรียนนำหนังสือมาคืน
+my_library.return_book("B02")
